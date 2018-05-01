@@ -600,9 +600,6 @@ void draw_lines( struct matrix * points, screen s, zbuffer zb, color c) {
                s, zb, c);
 }// end draw_lines
 
-
-
-
 void draw_line(int x0, int y0, double z0,
                int x1, int y1, double z1,
                screen s, zbuffer zb, color c) {
