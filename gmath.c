@@ -40,17 +40,9 @@ color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
 
 // PKs[(2(Ñ●Ĺ)Ñ-Ĺ)●V]^x
 color calculate_specular(double light[2][3], double *sreflect, double *view, double *normal ) {
-  normalize(normal);
-  color light_color;
-  light_color.red = light[COLOR][RED];
-  light_color.green = light[COLOR][GREEN];
-  light_color.blue = light[COLOR][BLUE];
 
-  double light_location[3];
-  light_location[0] = light[LOCATION][0];
-  light_location[1] = light[LOCATION][1];
-  light_location[2] = light[LOCATION][2];
-  normalize(light_location);
+  double* light_location;
+  light_location = light[LOCATION];
 
   // 2(Ñ●Ĺ)Ñ-Ĺ
   double big[3];
@@ -59,9 +51,9 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
   big[2] = 2*dot_product(normal, light_location) * normal[2] - light_location[2];
 
   color s;
-  s.red = light_color.red * sreflect[RED] * pow(dot_product(big, view), 13);
-  s.green = light_color.green * sreflect[GREEN] * pow(dot_product(big, view), 13);
-  s.blue = light_color.blue * sreflect[BLUE] * pow(dot_product(big, view), 13);
+  s.red = light[COLOR][RED] * sreflect[RED] * pow(dot_product(big, view), 13);
+  s.green = light[COLOR][GREEN] * sreflect[GREEN] * pow(dot_product(big, view), 13);
+  s.blue = light[COLOR][BLUE] * sreflect[BLUE] * pow(dot_product(big, view), 13);
   return s;
 }
 
