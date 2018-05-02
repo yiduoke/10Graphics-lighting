@@ -9,43 +9,38 @@
 //lighting functions
 color get_lighting( double *normal, double *view, color alight, double light[2][3], double *areflect, double *dreflect, double *sreflect) {
   color i;
+  normalize(normal);
+  normalize(light[LOCATION]);
+  normalize(view);
   i.red = calculate_ambient(alight, areflect).red + calculate_diffuse(light, dreflect, normal).red + calculate_specular(light, sreflect, view, normal).red;
   i.green = calculate_ambient(alight, areflect).green + calculate_diffuse(light, dreflect, normal).green + calculate_specular(light, sreflect, view, normal).green;
   i.blue = calculate_ambient(alight, areflect).blue + calculate_diffuse(light, dreflect, normal).blue + calculate_specular(light, sreflect, view, normal).blue;
+  limit_color(&i);
   return i;
 }
 
 color calculate_ambient(color alight, double *areflect ) {
   color a;
-  a.red = alight.red;
-  a.green = alight.green;
-  a.blue = alight.blue;
+  a.red = alight.red * areflect[RED];
+  a.green = alight.green * areflect[GREEN];
+  a.blue = alight.blue * areflect[BLUE];
 
-  limit_color(&a);
   return a;
 }
 
 // P * Kd * (N̂ • L̂)
 color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
-  color light_color;
-  light_color.red = light[COLOR][RED];
-  light_color.green = light[COLOR][GREEN];
-  light_color.blue = light[COLOR][BLUE];
-
-  double light_location[3];
-  light_location[0] = light[LOCATION][0];
-  light_location[1] = light[LOCATION][1];
-  light_location[2] = light[LOCATION][2];
-
   color d;
-  d.red = light_color.red * dreflect[RED] * dot_product(normal, light_location);
-  d.green = light_color.green * dreflect[GREEN] * dot_product(normal, light_location);
-  d.red = light_color.blue * dreflect[BLUE] * dot_product(normal, light_location);
+  d.red = light[COLOR][RED] * dreflect[RED] * dot_product(normal, light[LOCATION]);
+  d.green = light[COLOR][GREEN] * dreflect[GREEN] * dot_product(normal, light[LOCATION]);
+  d.blue = light[COLOR][BLUE] * dreflect[BLUE] * dot_product(normal, light[LOCATION]);
+
   return d;
 }
 
 // PKs[(2(Ñ●Ĺ)Ñ-Ĺ)●V]^x
 color calculate_specular(double light[2][3], double *sreflect, double *view, double *normal ) {
+  normalize(normal);
   color light_color;
   light_color.red = light[COLOR][RED];
   light_color.green = light[COLOR][GREEN];
@@ -55,6 +50,7 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
   light_location[0] = light[LOCATION][0];
   light_location[1] = light[LOCATION][1];
   light_location[2] = light[LOCATION][2];
+  normalize(light_location);
 
   // 2(Ñ●Ĺ)Ñ-Ĺ
   double big[3];
@@ -97,8 +93,8 @@ void limit_color( color * c ) {
 void normalize( double *vector ) {
   float magnitude = sqrt(pow(vector[0], 2) + pow(vector[1], 2) + pow(vector[2], 2));
   vector[0] = vector[0] / magnitude;
-  vector[1] = vector[0] / magnitude;
-  vector[2] = vector[0] / magnitude;
+  vector[1] = vector[1] / magnitude;
+  vector[2] = vector[2] / magnitude;
 }
 
 //Return the dot porduct of a . b

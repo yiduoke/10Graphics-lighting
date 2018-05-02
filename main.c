@@ -14,7 +14,6 @@ int main(int argc, char **argv) {
 
   //Lighting values here for easy access
   color ambient;
-  color diffuse;
   double light[2][3];
   double view[3];
   double areflect[3];
@@ -25,12 +24,8 @@ int main(int argc, char **argv) {
   ambient.green = 50;
   ambient.blue = 50;
 
-  diffuse.red = 250;
-  diffuse.green = 250;
-  diffuse.blue = 250;
-
-  light[LOCATION][0] = 0.5;
-  light[LOCATION][1] = 0.75;
+  light[LOCATION][0] = 1;
+  light[LOCATION][1] = 1;
   light[LOCATION][2] = 1;
 
   light[COLOR][RED] = 0;
