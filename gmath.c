@@ -31,9 +31,15 @@ color calculate_ambient(color alight, double *areflect ) {
 // P * Kd * (N̂ • L̂)
 color calculate_diffuse(double light[2][3], double *dreflect, double *normal ) {
   color d;
-  d.red = light[COLOR][RED] * dreflect[RED] * dot_product(normal, light[LOCATION]);
-  d.green = light[COLOR][GREEN] * dreflect[GREEN] * dot_product(normal, light[LOCATION]);
-  d.blue = light[COLOR][BLUE] * dreflect[BLUE] * dot_product(normal, light[LOCATION]);
+  d.red = 0;
+  d.green = 0;
+  d.blue = 0;
+
+  if (dot_product(light[LOCATION], normal) > 0){
+    d.red = light[COLOR][RED] * dreflect[RED] * dot_product(normal, light[LOCATION]);
+    d.green = light[COLOR][GREEN] * dreflect[GREEN] * dot_product(normal, light[LOCATION]);
+    d.blue = light[COLOR][BLUE] * dreflect[BLUE] * dot_product(normal, light[LOCATION]);
+  }
 
   return d;
 }
@@ -44,16 +50,22 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
   double* light_location;
   light_location = light[LOCATION];
 
-  // 2(Ñ●Ĺ)Ñ-Ĺ
-  double big[3];
-  big[0] = 2*dot_product(normal, light_location) * normal[0] - light_location[0];
-  big[1] = 2*dot_product(normal, light_location) * normal[1] - light_location[1];
-  big[2] = 2*dot_product(normal, light_location) * normal[2] - light_location[2];
-
   color s;
-  s.red = light[COLOR][RED] * sreflect[RED] * pow(dot_product(big, view), 13);
-  s.green = light[COLOR][GREEN] * sreflect[GREEN] * pow(dot_product(big, view), 13);
-  s.blue = light[COLOR][BLUE] * sreflect[BLUE] * pow(dot_product(big, view), 13);
+  s.red = 0;
+  s.green = 0;
+  s.blue = 0;
+
+  if (dot_product(normal, light_location) > 0){
+    // 2(Ñ●Ĺ)Ñ-Ĺ
+    double big[3];
+    big[0] = 2*dot_product(normal, light_location) * normal[0] - light_location[0];
+    big[1] = 2*dot_product(normal, light_location) * normal[1] - light_location[1];
+    big[2] = 2*dot_product(normal, light_location) * normal[2] - light_location[2];
+
+    s.red = light[COLOR][RED] * sreflect[RED] * pow(dot_product(big, view), 13);
+    s.green = light[COLOR][GREEN] * sreflect[GREEN] * pow(dot_product(big, view), 13);
+    s.blue = light[COLOR][BLUE] * sreflect[BLUE] * pow(dot_product(big, view), 13);
+  }
   return s;
 }
 
