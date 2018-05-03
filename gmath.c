@@ -49,6 +49,7 @@ color calculate_specular(double light[2][3], double *sreflect, double *view, dou
 
   double* light_location;
   light_location = light[LOCATION];
+  normalize(light_location);
 
   color s;
   s.red = 0;

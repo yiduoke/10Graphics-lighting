@@ -29,7 +29,6 @@ stack.o: stack.c stack.h matrix.h
 	$(CC) $(CFLAGS) -c stack.c
 
 run: all
-	./main script
 
 clean:
-	rm *.o *~
+	rm main *.o *.png
